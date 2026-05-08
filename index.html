@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Volley Pro">
+<meta name="theme-color" content="#080808">
+<title>Volley Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080808;
+    --surface: #111111;
+    --surface2: #181818;
+    --border: rgba(255,255,255,0.07);
+    --text: #f0f0f0;
+    --muted: #666;
+    --muted2: #444;
+    --A: #E8FF3A;
+    --B: #3AFFB8;
+    --C: #FF6B3A;
+    --D: #C77DFF;
+    --danger: #FF5555;
+    --safe: inset 0 1px 0 rgba(255,255,255,0.05);
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { background: var(--bg); height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overscroll-behavior: none;
+    -webkit-font-smoothing: antialiased;
+  }
+  .app {
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+/* HEADER */
+.header {
+padding: calc(var(–safe-top) + 18px) 20px 0;
+background: var(–bg);
+position: sticky;
+top: 0;
+z-index: 100;
+border-bottom: 1px solid var(–border);
+}
+.header-top {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+margin-bottom: 16px;
+}
+.app-title {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 32px;
+font-weight: 900;
+letter-spacing: 1px;
+line-height: 1;
+text-transform: uppercase;
+}
+.app-subtitle {
+font-size: 11px;
+color: var(–muted);
+letter-spacing: 2px;
+text-transform: uppercase;
+margin-top: 3px;
+}
+.week-ctrl {
+display: flex;
+align-items: center;
+gap: 6px;
+background: var(–surface2);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 6px 10px;
+}
+.week-btn {
+background: none;
+border: none;
+color: var(–muted);
+font-size: 18px;
+cursor: pointer;
+width: 24px;
+height: 24px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 6px;
+transition: background 0.15s;
+}
+.week-btn:active { background: rgba(255,255,255,0.1); }
+.week-label {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 18px;
+font-weight: 700;
+letter-spacing: 1px;
+min-width: 38px;
+text-align: center;
+}
+
+/* PHASE BADGE */
+.phase-bar {
+display: flex;
+gap: 8px;
+margin-bottom: 14px;
+align-items: center;
+}
+.phase-badge {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 13px;
+font-weight: 700;
+letter-spacing: 1px;
+padding: 4px 12px;
+border-radius: 6px;
+text-transform: uppercase;
+cursor: pointer;
+border: 1px solid transparent;
+transition: all 0.2s;
+}
+.phase-badge.active-1 { background: rgba(232,255,58,0.15); border-color: var(–A); color: var(–A); }
+.phase-badge.active-2 { background: rgba(58,255,184,0.15); border-color: var(–B); color: var(–B); }
+.phase-badge.inactive { background: var(–surface2); color: var(–muted); border-color: var(–border); }
+.phase-desc {
+font-size: 11px;
+color: var(–muted);
+flex: 1;
+}
+
+/* NAV TABS */
+.nav-tabs {
+display: flex;
+gap: 0;
+}
+.nav-tab {
+flex: 1;
+background: none;
+border: none;
+border-bottom: 2px solid transparent;
+padding: 10px 0 9px;
+font-family: ‘Barlow’, sans-serif;
+font-size: 12px;
+font-weight: 600;
+letter-spacing: 0.5px;
+color: var(–muted);
+cursor: pointer;
+transition: all 0.2s;
+text-transform: uppercase;
+}
+.nav-tab.active { color: var(–text); border-bottom-color: #fff; }
+
+/* CONTENT */
+.content {
+padding: 20px 20px calc(var(–safe-bottom) + 20px);
+flex: 1;
+}
+
+/* DAY SELECTOR */
+.day-tabs {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 8px;
+margin-bottom: 20px;
+}
+.day-tab {
+background: var(–surface2);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 12px 0;
+cursor: pointer;
+transition: all 0.2s;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 4px;
+}
+.day-tab-letter {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 26px;
+font-weight: 900;
+line-height: 1;
+transition: color 0.2s;
+color: var(–muted2);
+}
+.day-tab-label {
+font-size: 9px;
+letter-spacing: 0.5px;
+color: var(–muted2);
+text-align: center;
+line-height: 1.2;
+text-transform: uppercase;
+}
+.day-tab.done-mark::after {
+content: ‘✓’;
+font-size: 10px;
+opacity: 0.7;
+}
+
+/* MODULAR PLAN */
+.modular-hint {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 14px;
+margin-bottom: 20px;
+display: flex;
+gap: 10px;
+}
+.modular-days {
+display: flex;
+flex-direction: column;
+gap: 6px;
+flex: 1;
+}
+.modular-row {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.modular-key {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-weight: 700;
+font-size: 13px;
+color: var(–muted);
+min-width: 48px;
+}
+.modular-val {
+display: flex;
+gap: 5px;
+}
+.mod-chip {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 13px;
+font-weight: 700;
+padding: 2px 8px;
+border-radius: 5px;
+border: 1px solid;
+}
+
+/* DAY HEADER */
+.day-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+margin-bottom: 16px;
+}
+.day-big {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 44px;
+font-weight: 900;
+line-height: 1;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+.day-subtitle {
+font-size: 12px;
+color: var(–muted);
+margin-top: 3px;
+letter-spacing: 0.5px;
+text-transform: uppercase;
+}
+.done-btn {
+background: transparent;
+border: 1.5px solid;
+border-radius: 10px;
+padding: 8px 16px;
+font-family: ‘Barlow’, sans-serif;
+font-size: 13px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.2s;
+white-space: nowrap;
+margin-top: 4px;
+}
+
+/* SHOULDER WARMUP */
+.shoulder-warmup {
+background: rgba(255,85,85,0.07);
+border: 1px solid rgba(255,85,85,0.2);
+border-radius: 12px;
+padding: 14px;
+margin-bottom: 16px;
+}
+.warmup-title {
+font-size: 11px;
+font-weight: 700;
+color: var(–danger);
+letter-spacing: 1px;
+text-transform: uppercase;
+margin-bottom: 8px;
+}
+.warmup-item {
+font-size: 12px;
+color: #aaa;
+padding: 2px 0;
+display: flex;
+gap: 6px;
+}
+.warmup-item::before { content: ‘—’; color: var(–danger); opacity: 0.5; }
+
+/* EXERCISE CARD */
+.ex-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 14px;
+margin-bottom: 10px;
+overflow: hidden;
+transition: border-color 0.2s;
+}
+.ex-card.open { border-color: rgba(255,255,255,0.15); }
+.ex-header {
+padding: 14px 16px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+cursor: pointer;
+user-select: none;
+-webkit-user-select: none;
+}
+.ex-header:active { background: rgba(255,255,255,0.03); }
+.ex-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.ex-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.ex-name {
+font-weight: 600;
+font-size: 14px;
+color: var(–text);
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+.ex-badge {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 13px;
+font-weight: 600;
+color: var(–muted);
+background: rgba(255,255,255,0.05);
+border-radius: 5px;
+padding: 2px 8px;
+white-space: nowrap;
+flex-shrink: 0;
+}
+.ex-right {
+display: flex;
+align-items: center;
+gap: 8px;
+flex-shrink: 0;
+margin-left: 8px;
+}
+.ex-last-kg {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 16px;
+font-weight: 700;
+}
+.ex-chevron {
+color: var(–muted2);
+font-size: 16px;
+transition: transform 0.2s;
+}
+.ex-card.open .ex-chevron { transform: rotate(90deg); }
+
+/* EXERCISE BODY */
+.ex-body {
+border-top: 1px solid var(–border);
+padding: 14px 16px 16px;
+display: none;
+}
+.ex-card.open .ex-body { display: block; }
+.ex-section-label {
+font-size: 10px;
+font-weight: 700;
+letter-spacing: 1.5px;
+text-transform: uppercase;
+margin-bottom: 5px;
+}
+.ex-execution {
+font-size: 13px;
+color: #bbb;
+line-height: 1.7;
+margin-bottom: 12px;
+}
+.ex-tip {
+font-size: 12px;
+color: var(–muted);
+font-style: italic;
+line-height: 1.6;
+padding: 10px;
+background: rgba(255,255,255,0.03);
+border-radius: 8px;
+margin-bottom: 12px;
+}
+.ex-tip::before { content: ’💡 ’; }
+.ex-warning {
+font-size: 12px;
+color: #ff9090;
+background: rgba(255,85,85,0.08);
+border: 1px solid rgba(255,85,85,0.2);
+border-radius: 8px;
+padding: 10px 12px;
+margin-bottom: 12px;
+line-height: 1.6;
+}
+.ex-warning::before { content: ’⚠️ ’; }
+
+/* LOG */
+.log-toggle {
+background: rgba(255,255,255,0.06);
+border: 1px solid var(–border);
+border-radius: 8px;
+padding: 7px 14px;
+font-size: 12px;
+font-weight: 600;
+color: var(–muted);
+cursor: pointer;
+transition: all 0.2s;
+margin-bottom: 12px;
+display: inline-block;
+}
+.log-toggle.open { background: rgba(255,255,255,0.1); color: var(–text); }
+.log-area { display: none; }
+.log-area.open { display: block; }
+.log-input-row {
+display: flex;
+gap: 8px;
+margin-bottom: 10px;
+}
+.log-input {
+background: rgba(255,255,255,0.06);
+border: 1px solid var(–border);
+border-radius: 8px;
+padding: 8px 10px;
+color: var(–text);
+font-family: ‘Barlow’, sans-serif;
+font-size: 13px;
+outline: none;
+transition: border-color 0.2s;
+}
+.log-input:focus { border-color: rgba(255,255,255,0.25); }
+.log-input.kg { width: 70px; }
+.log-input.note { flex: 1; }
+.log-add-btn {
+padding: 8px 16px;
+border: none;
+border-radius: 8px;
+font-family: ‘Barlow’, sans-serif;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+transition: opacity 0.15s;
+white-space: nowrap;
+}
+.log-add-btn:active { opacity: 0.7; }
+.log-entries { display: flex; flex-direction: column; gap: 5px; }
+.log-entry {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 7px 10px;
+background: rgba(255,255,255,0.03);
+border-radius: 7px;
+font-size: 12px;
+}
+.log-entry-date { color: var(–muted); }
+.log-entry-kg { font-family: ‘Barlow Condensed’, sans-serif; font-size: 16px; font-weight: 700; }
+.log-entry-note { color: var(–muted); font-style: italic; font-size: 11px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.log-empty { color: var(–muted2); font-size: 12px; padding: 4px 0; }
+
+/* PROGRESS CHART */
+.progress-chart {
+margin-top: 10px;
+}
+.chart-bars {
+display: flex;
+align-items: flex-end;
+gap: 4px;
+height: 40px;
+margin-bottom: 4px;
+}
+.chart-bar {
+flex: 1;
+border-radius: 3px 3px 0 0;
+min-height: 4px;
+transition: height 0.3s;
+opacity: 0.8;
+}
+.chart-labels {
+display: flex;
+gap: 4px;
+}
+.chart-label {
+flex: 1;
+font-size: 9px;
+color: var(–muted2);
+text-align: center;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+
+/* RPE SECTION */
+.rpe-card {
+display: flex;
+align-items: center;
+gap: 14px;
+padding: 14px;
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+margin-bottom: 10px;
+}
+.rpe-number {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 36px;
+font-weight: 900;
+line-height: 1;
+min-width: 42px;
+text-align: center;
+}
+.rpe-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.rpe-desc { font-size: 12px; color: var(–muted); line-height: 1.5; }
+
+/* NOTES */
+.note-card {
+border-left: 3px solid;
+padding: 12px 14px;
+background: var(–surface);
+border-radius: 0 10px 10px 0;
+margin-bottom: 12px;
+}
+.note-title { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 5px; }
+.note-text { font-size: 13px; color: #aaa; line-height: 1.7; }
+
+/* OVERVIEW */
+.overview-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+margin-bottom: 20px;
+}
+.overview-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 14px;
+}
+.overview-num {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 32px;
+font-weight: 900;
+line-height: 1;
+}
+.overview-label { font-size: 11px; color: var(–muted); margin-top: 3px; letter-spacing: 0.5px; text-transform: uppercase; }
+.progress-ring-wrap { display: flex; justify-content: center; margin-bottom: 20px; }
+
+/* SECTION TITLE */
+.section-title {
+font-family: ‘Barlow Condensed’, sans-serif;
+font-size: 14px;
+font-weight: 700;
+letter-spacing: 2px;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 12px;
+margin-top: 4px;
+}
+
+/* DIVIDER */
+.divider { height: 1px; background: var(–border); margin: 16px 0; }
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(12px); }
+to { opacity: 1; transform: translateY(0); }
+}
+.content > * { animation: fadeUp 0.25s ease both; }
+.content > *:nth-child(2) { animation-delay: 0.04s; }
+.content > *:nth-child(3) { animation-delay: 0.08s; }
+.content > *:nth-child(4) { animation-delay: 0.12s; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
+
+/* TOAST */
+.toast {
+position: fixed;
+bottom: calc(var(–safe-bottom) + 20px);
+left: 50%;
+transform: translateX(-50%) translateY(20px);
+background: rgba(255,255,255,0.95);
+color: #000;
+padding: 10px 20px;
+border-radius: 20px;
+font-size: 13px;
+font-weight: 600;
+opacity: 0;
+transition: all 0.3s;
+pointer-events: none;
+z-index: 999;
+white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="app-title">Volley <span id="titleAccent">Pro</span></div>
+        <div class="app-subtitle">Centrale — Serie D</div>
+      </div>
+      <div class="week-ctrl">
+        <button class="week-btn" onclick="changeWeek(-1)">‹</button>
+        <div class="week-label" id="weekLabel">W1</div>
+        <button class="week-btn" onclick="changeWeek(1)">›</button>
+      </div>
+    </div>
+
+```
+<div class="phase-bar">
+  <div class="phase-badge" id="phaseBadge1" onclick="setPhase(1)">Fase 1</div>
+  <div class="phase-badge" id="phaseBadge2" onclick="setPhase(2)">Fase 2</div>
+  <div class="phase-desc" id="phaseDesc"></div>
+</div>
+
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showSection('workout')" id="tab-workout">Scheda</button>
+  <button class="nav-tab" onclick="showSection('overview')" id="tab-overview">Riepilogo</button>
+  <button class="nav-tab" onclick="showSection('rpe')" id="tab-rpe">Intensità</button>
+  <button class="nav-tab" onclick="showSection('notes')" id="tab-notes">Note</button>
+</div>
+```
+
+  </div>
+
+  <div class="content" id="mainContent"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const COLORS = { A: '#E8FF3A', B: '#3AFFB8', C: '#FF6B3A', D: '#C77DFF' };
+
+const PHASES = {
+  1: {
+    label: 'Ricondizionamento',
+    desc: 'Sett. 1–3 · Carichi moderati, volume ridotto',
+    sets_modifier: -1, // -1 serie sui compound
+    rpe_target: '6–7',
+    note: 'Fase iniziale: riduci di 1 serie gli esercizi compound (squat, stacco, rematore, panca). Concentrati sulla tecnica, non sul carico. I tendini impiegano 3x più dei muscoli ad adattarsi.'
+  },
+  2: {
+    label: 'Progressione',
+    desc: 'Sett. 4+ · Volume pieno, progressione carico',
+    sets_modifier: 0,
+    rpe_target: '7–8',
+    note: 'Volume pieno. Aggiungi carico solo quando completi tutte le serie con tecnica impeccabile. Obiettivo: +2.5kg ogni 1–2 settimane sui compound.'
+  }
+};
+
+const WORKOUTS = {
+  A: {
+    title: 'Lower — Forza/Potenza',
+    upper: false,
+    priority: 1,
+    exercises: [
+      {
+        id: 'squat', name: 'Squat Bilanciere', compound: true,
+        sets: 4, reps: '5',
+        execution: 'Piedi a larghezza spalle, punte leggermente aperte. Discesa controllata in 3 secondi, risalita esplosiva. Mantieni il petto alto e la schiena neutra. Profondità completa.',
+        tip: 'Il ritmo è tutto: lento in discesa, esplosivo in salita. Questo trasferisce direttamente alla potenza del salto.',
+        warning: null
+      },
+      {
+        id: 'rdl', name: 'Romanian Deadlift', compound: true,
+        sets: 3, reps: '8',
+        execution: 'Bilanciere vicino al corpo, cerniera all\'anca. Scendi fino a sentire tensione negli ischiocrurali, non oltre. Schiena rigida per tutto il movimento. Non è uno stacco classico.',
+        tip: 'Ischio-crurali forti = meno infortuni al ginocchio nei salti ripetuti. Esercizio spesso sottovalutato.',
+        warning: null
+      },
+      {
+        id: 'legpress', name: 'Leg Press', compound: false,
+        sets: 3, reps: '10',
+        execution: 'Piedi alti e larghi per enfatizzare glutei. Non bloccare le ginocchia in estensione. Scendi fino a 90°. Spingi con tutta la pianta del piede.',
+        tip: 'Posizione dei piedi alta = glutei. Bassa e stretta = quadricipiti. Usa quella alta per il volley.',
+        warning: null
+      },
+      {
+        id: 'nordiccurl', name: 'Nordic Curl / Leg Curl', compound: false,
+        sets: 3, reps: '8',
+        execution: 'Nordic: rallenta la discesa il più possibile, usa le mani per risalire. In macchina: eccentrica lenta (3 sec), concentrica normale.',
+        tip: 'Gli ischiocrurali sono il principale stabilizzatore del ginocchio nell\'atterraggio da muro. Non saltare mai questo.',
+        warning: null
+      },
+      {
+        id: 'calf', name: 'Calf Raise (in piedi)', compound: false,
+        sets: 4, reps: '12',
+        execution: 'Salita esplosiva, tenuta 1 sec in cima, discesa in 3 sec. Usa gradino per range completo se disponibile.',
+        tip: 'L\'eccentrica lenta protegge il tendine d\'Achille, molto sollecitato nelle partite estive su sabbia.',
+        warning: null
+      },
+      {
+        id: 'deadbug', name: 'Dead Bug', compound: false,
+        sets: 3, reps: '10/lato',
+        execution: 'Schiena incollata al pavimento, nessuna compensazione lombare. Estendi braccio e gamba opposta simultaneamente espirando lentamente.',
+        tip: 'Core antiflessione = trasferimento diretto di forza nel salto. Fondamentale per il centrale.',
+        warning: null
+      }
+    ]
+  },
+  B: {
+    title: 'Upper — Orizzontale',
+    upper: true,
+    priority: 2,
+    exercises: [
+      {
+        id: 'panca_mdb', name: 'Panca Piana Manubri', compound: true,
+        sets: 4, reps: '8',
+        execution: 'Scapole retratte e depresse. Discesa controllata con i gomiti a 45–60° dal corpo. Non rimbalzare sul petto. Manubri permettono traiettoria libera.',
+        tip: 'I manubri invece del bilanciere proteggono la spalla permettendo alla cuffia di trovare la traiettoria naturale.',
+        warning: 'SPALLA: Se senti fastidio alla spalla destra (non bruciore muscolare, ma fastidio articolare), riduci il range di movimento o salta la sessione di questo esercizio.'
+      },
+      {
+        id: 'rematore_bb', name: 'Rematore con Bilanciere', compound: true,
+        sets: 4, reps: '8',
+        execution: 'Busto a 45°, schiena neutra, core braced. Porta il bilanciere verso l\'ombelico. Mantieni la contrazione 1 sec. Presa supina attiva meglio i bicipiti.',
+        tip: 'I dorsali forti sono la base del colpo di attacco. Questo esercizio è tra i più importanti della settimana.',
+        warning: null
+      },
+      {
+        id: 'tbar_row', name: 'T-Bar Row / Rematore Manubrio', compound: true,
+        sets: 3, reps: '10',
+        execution: 'Petto appoggiato alla panca inclinata. Elimina i compensi lombari. Tira verso il petto, scapole retratte in cima.',
+        tip: 'Versione di supporto del rematore: attacca gli stessi muscoli con meno stress sulla colonna.',
+        warning: null
+      },
+      {
+        id: 'pullap_ela', name: 'Face Pull TRX / Alzate Frontali Manubri', compound: false,
+        sets: 3, reps: '15',
+        execution: 'TRX: impugna le maniglie, inclina il corpo indietro, tira verso il viso aprendo i gomiti lateralmente. Se TRX non disponibile: alzate frontali con manubri leggeri, fino all\'altezza spalle, eccentrica controllata.',
+        tip: 'La priorità è sempre trovare un movimento che carichi i rotatori esterni e il deltoide posteriore. Il TRX è meglio se disponibile.',
+        warning: 'SPALLA: Non saltare mai questo esercizio o la sua alternativa. È prevenzione attiva per sovraspinato e infraspinato. Y-T-W con elastico puoi farlo a casa prima di uscire.'
+      },
+      {
+        id: 'renegade', name: 'Renegade Row', compound: false,
+        sets: 3, reps: '8/lato',
+        execution: 'Posizione plank con manubri. Tira un manubrio verso il fianco mantenendo i fianchi fermi e quadrati. Nessuna rotazione del busto.',
+        tip: 'Core + stabilità scapolare in un unico movimento. Simula la richiesta atletica del muro.',
+        warning: null
+      },
+      {
+        id: 'curl_bb', name: 'Curl Bilanciere', compound: false,
+        sets: 3, reps: '10',
+        execution: 'Gomiti fermi ai fianchi. Concentrati sulla contrazione in cima. Eccentrica controllata in 2 sec.',
+        tip: 'Il bicipite è stabilizzatore attivo della spalla. Non è solo estetica: protegge la cuffia durante i colpi.',
+        warning: null
+      }
+    ]
+  },
+  C: {
+    title: 'Lower — Ipertrofia/Atletica',
+    upper: false,
+    priority: 3,
+    exercises: [
+      {
+        id: 'bss', name: 'Bulgarian Split Squat', compound: true,
+        sets: 4, reps: '10/gamba',
+        execution: 'Piede posteriore su panca. Scendi verticalmente, non in avanti. Ginocchio anteriore non supera eccessivamente la punta. Busto eretto o leggermente inclinato.',
+        tip: 'Migliore esercizio per il tuo sport dopo lo squat. Sviluppa la potenza unilaterale che usi nell\'approccio da centrale.',
+        warning: null
+      },
+      {
+        id: 'stacco_sumo', name: 'Stacco Sumo / Trap Bar', compound: true,
+        sets: 3, reps: '8',
+        execution: 'Piedi larghi, punte aperte. Mantieni petto alto. Spingi il pavimento lontano da te nella risalita. Trap bar se disponibile.',
+        tip: 'Variante più sicura per la schiena rispetto allo stacco convenzionale. Ottima per potenza di gambe.',
+        warning: null
+      },
+      {
+        id: 'leg_ext', name: 'Leg Extension', compound: false,
+        sets: 3, reps: '12',
+        execution: 'Esegui lentamente. Tieni la contrazione 1 sec in cima. No slancio. Carico moderato.',
+        tip: 'Rinforzo VMO: stabilizza il ginocchio nell\'atterraggio da muro. Fondamentale per la salute del ginocchio a lungo termine.',
+        warning: null
+      },
+      {
+        id: 'leg_curl_m', name: 'Leg Curl Sdraiato', compound: false,
+        sets: 3, reps: '12',
+        execution: 'Tira i talloni verso i glutei in modo controllato. Eccentrica lenta 3 sec.',
+        tip: 'Bilanciamento antagonista. Non saltarlo se fai leg extension: rapporto quad/ischiocrurali è critico per la salute del ginocchio.',
+        warning: null
+      },
+      {
+        id: 'hip_thrust', name: 'Hip Thrust', compound: false,
+        sets: 3, reps: '12',
+        execution: 'Spalle sulla panca, bilanciere sull\'anca con cuscinetto. Spingi i fianchi verso il soffitto. Contrai i glutei in cima, non estendere la lombare.',
+        tip: 'Potenza dei glutei = direttamente correlata all\'altezza del salto. Esercizio spesso ignorato dagli atleti.',
+        warning: null
+      },
+      {
+        id: 'plank_var', name: 'Plank RKC + Laterale', compound: false,
+        sets: 3, reps: '30"',
+        execution: 'RKC: contrai glutei, quadricipiti, e tira i gomiti verso i piedi contemporaneamente. Senti tensione ovunque. Laterale: corpo dritto, non cedere al fianco.',
+        tip: 'Il plank RKC è 3x più attivante del plank passivo. Non sprecare tempo con il plank tradizionale.',
+        warning: null
+      }
+    ]
+  },
+  D: {
+    title: 'Upper — Verticale + Rotatori',
+    upper: true,
+    priority: 4,
+    exercises: [
+      {
+        id: 'lat_machine', name: 'Lat Machine Presa Larga', compound: true,
+        sets: 4, reps: '8',
+        execution: 'Tira verso il petto, MAI dietro la testa. Inizia il movimento con le scapole, poi i gomiti. Gomiti verso il basso e indietro.',
+        tip: 'Il grande dorsale è il motore del colpo di attacco. Priorità in questo giorno.',
+        warning: null
+      },
+      {
+        id: 'sp_mdb', name: 'Shoulder Press Manubri Seduto', compound: true,
+        sets: 3, reps: '10',
+        execution: 'Parte da altezza orecchie. Spingi verso l\'alto senza iperestendere la lombare. Abbassa lentamente a 90°.',
+        tip: 'Manubri, non bilanciere: permettono traiettoria naturale per la spalla. Seduto per eliminare compensi.',
+        warning: 'SPALLA: Riduci il carico se senti fastidio. Fermati all\'altezza delle orecchie se il movimento overhead causa problemi.'
+      },
+      {
+        id: 'pullover', name: 'Pullover con Manubrio', compound: false,
+        sets: 3, reps: '12',
+        execution: 'Disteso su panca trasversale, manubrio con entrambe le mani. Porta il manubrio oltre la testa mantenendo i gomiti leggermente piegati. Senti lo stretch del dorsale.',
+        tip: 'Gran dorsale + scarico passivo della spalla. Migliora anche la mobilità toracica utile per i colpi.',
+        warning: null
+      },
+      {
+        id: 'alzate_lat', name: 'Alzate Laterali Manubri', compound: false,
+        sets: 3, reps: '15',
+        execution: 'Leggermente inclinato in avanti. Alza fino all\'altezza delle spalle con il pollice leggermente abbassato. Stop prima che le spalle si alzino.',
+        tip: 'Carico leggero, focus sulla forma. Non tirare con il trapezio. Deltoide laterale: stabilità del colpo in sospensione.',
+        warning: 'SPALLA: Carico molto conservativo nelle prime settimane. Fastidio = stop.'
+      },
+      {
+        id: 'rot_est', name: 'Rotatori Esterni Manubrio (su fianco)', compound: false,
+        sets: 3, reps: '15',
+        execution: 'Sdraiato su fianco, gomito a 90° appoggiato sul fianco come fulcro fisso. Ruota l\'avambraccio verso il soffitto lentamente. Carico leggero: 2–4kg max. Eccentrica controllata.',
+        tip: 'Direttamente per sovraspinato e infraspinato. Con la tua storia è non negoziabile. Peso molto leggero: non è un esercizio di forza, è di controllo motorio.',
+        warning: 'SPALLA: Se senti fastidio, riduci il carico immediatamente. Movimento lento e controllato sempre.'
+      },
+      {
+        id: 'ytw', name: 'Rear Delt Fly Manubri (panca inclinata)', compound: false,
+        sets: 2, reps: '15',
+        execution: 'Seduto sulla panca inclinata con il petto appoggiato (angolo ~45°). Braccia verso il basso, manubri leggeri. Alza lateralmente fino all\'altezza delle spalle, gomiti leggermente piegati. Eccentrica lenta.',
+        tip: 'Chiude la sessione lavorando il deltoide posteriore e i rotatori. Panca inclinata elimina i compensi del busto.',
+        warning: null
+      }
+    ]
+  }
+};
+
+const SHOULDER_WARMUP = [
+  'Band pull-apart: 2×15 (a casa prima di uscire)',
+  'Rotazioni interne/esterne elastico: 2×15/lato (a casa)',
+  'W-press con elastico: 2×12 (a casa)',
+  'Arm circles progressivi in palestra: 30 sec',
+  'Pendolo passivo: 30 sec per lato'
+];
+
+// ============================================================
+// STATE
+// ============================================================
+function loadState() {
+  try { return JSON.parse(localStorage.getItem('vp_state')) || {}; } catch { return {}; }
+}
+function saveState() {
+  try { localStorage.setItem('vp_state', JSON.stringify(state)); } catch {}
+}
+
+let state = {
+  week: 1,
+  phase: 1,
+  currentSection: 'workout',
+  currentDay: 'A',
+  doneMap: {}, // key: `${day}_w${week}` -> bool
+  logMap: {},  // key: exId -> [{date, kg, note}]
+  openCards: {}, // exId -> bool
+  openLogs: {},  // exId -> bool
+  ...loadState()
+};
+
+// ============================================================
+// RENDER ENGINE
+// ============================================================
+function render() {
+  saveState();
+  updateHeader();
+  const c = document.getElementById('mainContent');
+  c.innerHTML = '';
+
+  if (state.currentSection === 'workout') renderWorkout(c);
+  else if (state.currentSection === 'overview') renderOverview(c);
+  else if (state.currentSection === 'rpe') renderRPE(c);
+  else if (state.currentSection === 'notes') renderNotes(c);
+
+  // re-attach tab highlight
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const active = document.getElementById(`tab-${state.currentSection}`);
+  if (active) active.classList.add('active');
+}
+
+function updateHeader() {
+  document.getElementById('weekLabel').textContent = `W${state.week}`;
+  const p1 = document.getElementById('phaseBadge1');
+  const p2 = document.getElementById('phaseBadge2');
+  const desc = document.getElementById('phaseDesc');
+  p1.className = 'phase-badge ' + (state.phase === 1 ? 'active-1' : 'inactive');
+  p2.className = 'phase-badge ' + (state.phase === 2 ? 'active-2' : 'inactive');
+  desc.textContent = PHASES[state.phase].desc;
+}
+
+// ============================================================
+// WORKOUT SECTION
+// ============================================================
+function renderWorkout(c) {
+  // Modular hint
+  const hint = el('div', 'modular-hint');
+  hint.innerHTML = `
+    <div class="modular-days">
+      <div class="section-title" style="margin-bottom:8px">Piano modulare</div>
+      ${[
+        { days: 2, chips: ['A','B'] },
+        { days: 3, chips: ['A','B','C oppure D'] },
+        { days: 4, chips: ['A','B','C','D'] }
+      ].map(row => `
+        <div class="modular-row">
+          <div class="modular-key">${row.days} gg/sett.</div>
+          <div class="modular-val">
+            ${row.chips.map(d => {
+              const col = COLORS[d] || 'rgba(255,255,255,0.3)';
+              return `<span class="mod-chip" style="color:${col};border-color:${col};opacity:0.9">${d}</span>`;
+            }).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  c.appendChild(hint);
+
+  // Day tabs
+  const dayTabs = el('div', 'day-tabs');
+  ['A','B','C','D'].forEach(d => {
+    const w = WORKOUTS[d];
+    const col = COLORS[d];
+    const active = state.currentDay === d;
+    const doneKey = `${d}_w${state.week}`;
+    const done = state.doneMap[doneKey];
+    const tab = el('div', 'day-tab' + (done ? ' done-mark' : ''));
+    if (active) {
+      tab.style.background = hexAlpha(col, 0.15);
+      tab.style.borderColor = col;
+    }
+    tab.innerHTML = `
+      <div class="day-tab-letter" style="color:${active ? col : ''}">${d}</div>
+      <div class="day-tab-label" style="color:${active ? col : ''}">${w.upper ? 'Upper' : 'Lower'}</div>
+    `;
+    tab.onclick = () => { state.currentDay = d; render(); };
+    dayTabs.appendChild(tab);
+  });
+  c.appendChild(dayTabs);
+
+  const day = state.currentDay;
+  const w = WORKOUTS[day];
+  const col = COLORS[day];
+  const doneKey = `${day}_w${state.week}`;
+  const done = state.doneMap[doneKey];
+  const phaseData = PHASES[state.phase];
+
+  // Day header
+  const dh = el('div', 'day-header');
+  dh.innerHTML = `
+    <div>
+      <div class="day-big" style="color:${col}">Giorno ${day}</div>
+      <div class="day-subtitle">${w.title}</div>
+    </div>
+    <button class="done-btn" id="doneBtn" style="color:${done?'#000':col};border-color:${col};background:${done?col:'transparent'}">
+      ${done ? '✓ Completato' : 'Segna fatto'}
+    </button>
+  `;
+  dh.querySelector('#doneBtn').onclick = () => {
+    state.doneMap[doneKey] = !done;
+    if (!done) showToast('Allenamento completato 💪');
+    render();
+  };
+  c.appendChild(dh);
+
+  // Phase note
+  if (state.phase === 1) {
+    const pn = el('div', '');
+    pn.style.cssText = 'background:rgba(232,255,58,0.06);border:1px solid rgba(232,255,58,0.2);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#c8e030;line-height:1.6';
+    pn.textContent = '⚡ Fase 1: riduci di 1 serie gli esercizi compound. Priorità alla tecnica.';
+    c.appendChild(pn);
+  }
+
+  // Shoulder warmup
+  if (w.upper) {
+    const sw = el('div', 'shoulder-warmup');
+    sw.innerHTML = `<div class="warmup-title">⚠️ Riscaldamento Spalla Destra</div>` +
+      SHOULDER_WARMUP.map(s => `<div class="warmup-item">${s}</div>`).join('');
+    c.appendChild(sw);
+  }
+
+  // Exercises
+  w.exercises.forEach(ex => {
+    let sets = ex.sets;
+    if (ex.compound && phaseData.sets_modifier) sets = Math.max(2, sets + phaseData.sets_modifier);
+    c.appendChild(renderExCard(ex, sets, col, day));
+  });
+}
+
+function renderExCard(ex, sets, col, day) {
+  const isOpen = !!state.openCards[ex.id];
+  const isLogOpen = !!state.openLogs[ex.id];
+  const entries = state.logMap[ex.id] || [];
+  const last = entries[entries.length - 1];
+
+  const card = el('div', 'ex-card' + (isOpen ? ' open' : ''));
+  card.id = `card_${ex.id}`;
+
+  // Header
+  const header = el('div', 'ex-header');
+  header.innerHTML = `
+    <div class="ex-left">
+      <div class="ex-dot" style="background:${col}"></div>
+      <div class="ex-name">${ex.name}</div>
+      <div class="ex-badge">${sets}×${ex.reps}</div>
+    </div>
+    <div class="ex-right">
+      ${last ? `<span class="ex-last-kg" style="color:${col}">${last.kg}kg</span>` : ''}
+      <span class="ex-chevron">›</span>
+    </div>
+  `;
+  header.onclick = () => {
+    state.openCards[ex.id] = !isOpen;
+    render();
+  };
+  card.appendChild(header);
+
+  // Body
+  const body = el('div', 'ex-body');
+
+  let bodyHTML = `
+    <div class="ex-section-label" style="color:${col}">Esecuzione</div>
+    <div class="ex-execution">${ex.execution}</div>
+    <div class="ex-tip">${ex.tip}</div>
+  `;
+  if (ex.warning) bodyHTML += `<div class="ex-warning">${ex.warning}</div>`;
+
+  // Log toggle
+  bodyHTML += `<div class="log-toggle${isLogOpen ? ' open' : ''}" id="logtoggle_${ex.id}">📊 Log progressione ${entries.length > 0 ? `(${entries.length})` : ''}</div>`;
+
+  // Log area
+  bodyHTML += `<div class="log-area${isLogOpen ? ' open' : ''}" id="logarea_${ex.id}">`;
+  bodyHTML += `
+    <div class="log-input-row">
+      <input type="number" class="log-input kg" id="kg_${ex.id}" placeholder="kg" inputmode="decimal">
+      <input type="text" class="log-input note" id="note_${ex.id}" placeholder="nota (opz.)">
+      <button class="log-add-btn" id="logadd_${ex.id}" style="background:${col};color:#000">+</button>
+    </div>
+  `;
+
+  if (entries.length > 0) {
+    // Mini chart
+    const recent = entries.slice(-7);
+    const kgVals = recent.map(e => parseFloat(e.kg));
+    const maxKg = Math.max(...kgVals);
+    const minKg = Math.min(...kgVals);
+    const range = maxKg - minKg || 1;
+
+    bodyHTML += `<div class="progress-chart"><div class="chart-bars">`;
+    recent.forEach(e => {
+      const h = 8 + ((parseFloat(e.kg) - minKg) / range) * 32;
+      bodyHTML += `<div class="chart-bar" style="height:${h}px;background:${col}"></div>`;
+    });
+    bodyHTML += `</div><div class="chart-labels">`;
+    recent.forEach(e => {
+      bodyHTML += `<div class="chart-label">${e.kg}</div>`;
+    });
+    bodyHTML += `</div></div>`;
+
+    bodyHTML += `<div class="log-entries">`;
+    entries.slice().reverse().slice(0, 5).forEach(e => {
+      bodyHTML += `
+        <div class="log-entry">
+          <span class="log-entry-date">${e.date}</span>
+          <span class="log-entry-kg" style="color:${col}">${e.kg}kg</span>
+          ${e.note ? `<span class="log-entry-note">${e.note}</span>` : ''}
+        </div>`;
+    });
+    bodyHTML += `</div>`;
+  } else {
+    bodyHTML += `<div class="log-empty">Nessun dato ancora. Aggiungi il primo.</div>`;
+  }
+
+  bodyHTML += `</div>`; // close log-area
+
+  body.innerHTML = bodyHTML;
+
+  // Events after inject
+  body.querySelector(`#logtoggle_${ex.id}`).onclick = (e) => {
+    e.stopPropagation();
+    state.openLogs[ex.id] = !isLogOpen;
+    render();
+  };
+
+  const addBtn = body.querySelector(`#logadd_${ex.id}`);
+  if (addBtn) {
+    addBtn.onclick = (e) => {
+      e.stopPropagation();
+      const kgInput = body.querySelector(`#kg_${ex.id}`);
+      const noteInput = body.querySelector(`#note_${ex.id}`);
+      const kg = kgInput.value.trim();
+      if (!kg) { kgInput.style.borderColor = 'rgba(255,85,85,0.6)'; return; }
+      const entry = {
+        date: new Date().toLocaleDateString('it-IT'),
+        kg: parseFloat(kg),
+        note: noteInput.value.trim()
+      };
+      state.logMap[ex.id] = [...(state.logMap[ex.id] || []), entry];
+      state.openLogs[ex.id] = true;
+      showToast(`${ex.name}: ${kg}kg registrato`);
+      render();
+    };
+  }
+
+  card.appendChild(body);
+  return card;
+}
+
+// ============================================================
+// OVERVIEW SECTION
+// ============================================================
+function renderOverview(c) {
+  const allDays = ['A','B','C','D'];
+  const doneDays = allDays.filter(d => state.doneMap[`${d}_w${state.week}`]).length;
+  const totalEntries = Object.values(state.logMap).reduce((s, e) => s + e.length, 0);
+  const prs = countPRs();
+
+  // Grid stats
+  const grid = el('div', 'overview-grid');
+  grid.innerHTML = `
+    <div class="overview-card">
+      <div class="overview-num" style="color:var(--A)">${doneDays}/4</div>
+      <div class="overview-label">Sessioni W${state.week}</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-num" style="color:var(--B)">${totalEntries}</div>
+      <div class="overview-label">Log totali</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-num" style="color:var(--C)">${prs}</div>
+      <div class="overview-label">PR personali</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-num" style="color:var(--D)">W${state.week}</div>
+      <div class="overview-label">Settimana corrente</div>
+    </div>
+  `;
+  c.appendChild(grid);
+
+  // Weekly progress
+  const wp = el('div', '');
+  wp.innerHTML = `<div class="section-title">Settimana ${state.week}</div>`;
+  c.appendChild(wp);
+
+  const daysWrap = el('div', '');
+  daysWrap.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px';
+  allDays.forEach(d => {
+    const w = WORKOUTS[d];
+    const col = COLORS[d];
+    const done = state.doneMap[`${d}_w${state.week}`];
+    const dc = el('div', '');
+    dc.style.cssText = `background:${done ? hexAlpha(col,0.12) : 'var(--surface)'};border:1px solid ${done ? col : 'var(--border)'};border-radius:10px;padding:12px;`;
+    dc.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-family:'Barlow Condensed';font-size:22px;font-weight:900;color:${done?col:'var(--muted2)'}">${d}</span>
+        <span style="font-size:18px">${done ? '✓' : '○'}</span>
+      </div>
+      <div style="font-size:11px;color:${done?col:'var(--muted)'};margin-top:3px;text-transform:uppercase;letter-spacing:0.5px">${w.upper ? 'Upper' : 'Lower'}</div>
+    `;
+    daysWrap.appendChild(dc);
+  });
+  c.appendChild(daysWrap);
+
+  // Top lifts
+  const tl = el('div', '');
+  tl.innerHTML = `<div class="section-title">Massimi registrati</div>`;
+  c.appendChild(tl);
+
+  const topExercises = ['squat','rdl','rematore_bb','lat_machine','bss','hip_thrust'];
+  const topWrap = el('div','');
+  topWrap.style.cssText = 'display:flex;flex-direction:column;gap:7px;margin-bottom:20px';
+
+  topExercises.forEach(exId => {
+    const entries = state.logMap[exId] || [];
+    if (entries.length === 0) return;
+    const maxKg = Math.max(...entries.map(e => parseFloat(e.kg)));
+    const exName = findExName(exId);
+    const dayCol = findExColor(exId);
+    const row = el('div','');
+    row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:var(--surface);border-radius:9px;border:1px solid var(--border)';
+    row.innerHTML = `
+      <span style="font-size:13px;color:#bbb">${exName}</span>
+      <span style="font-family:'Barlow Condensed';font-size:20px;font-weight:700;color:${dayCol}">${maxKg}kg</span>
+    `;
+    topWrap.appendChild(row);
+  });
+
+  if (topWrap.children.length === 0) {
+    const empty = el('div','');
+    empty.style.cssText = 'color:var(--muted2);font-size:13px;padding:10px 0;text-align:center';
+    empty.textContent = 'Nessun dato ancora. Inizia ad allenare!';
+    topWrap.appendChild(empty);
+  }
+  c.appendChild(topWrap);
+}
+
+function countPRs() {
+  let count = 0;
+  Object.values(state.logMap).forEach(entries => {
+    if (entries.length >= 2) {
+      const last = parseFloat(entries[entries.length-1].kg);
+      const prev = Math.max(...entries.slice(0,-1).map(e=>parseFloat(e.kg)));
+      if (last > prev) count++;
+    }
+  });
+  return count;
+}
+
+function findExName(id) {
+  for (const d of Object.values(WORKOUTS)) {
+    const ex = d.exercises.find(e => e.id === id);
+    if (ex) return ex.name;
+  }
+  return id;
+}
+
+function findExColor(id) {
+  for (const [key, d] of Object.entries(WORKOUTS)) {
+    if (d.exercises.find(e => e.id === id)) return COLORS[key];
+  }
+  return '#fff';
+}
+
+// ============================================================
+// RPE SECTION
+// ============================================================
+function renderRPE(c) {
+  const intro = el('div','');
+  intro.style.cssText = 'color:var(--muted);font-size:13px;margin-bottom:16px;line-height:1.7';
+  intro.innerHTML = 'L\'RPE (Rate of Perceived Exertion) misura quanto sei vicino al cedimento muscolare. Con tornei distribuiti in estate, calibrare l\'intensità è fondamentale per non arrivare alle partite con le gambe stanche.';
+  c.appendChild(intro);
+
+  [
+    { rpe: 6, label: 'Settimana di torneo', desc: 'Lascia 4+ rip in serbatoio. Muoviti, mantieni il pattern motorio, non faticare.', color: '#3AFFB8' },
+    { rpe: 7, label: 'Settimana normale', desc: 'Lascia 3 rip. Buon ritmo, tecnica pulita. Standard per la maggior parte dell\'estate.', color: '#3AFFB8' },
+    { rpe: 8, label: 'Settimana focus', desc: 'Lascia 2 rip. Sfidante ma controllato. Usa solo in settimane senza gare ravvicinate.', color: '#E8FF3A' },
+    { rpe: 9, label: 'Non in estate', desc: 'Non con i tornei in corso. Rischio infortuni e recupero lento.', color: '#FF5555' },
+  ].forEach(r => {
+    const card = el('div', 'rpe-card');
+    card.innerHTML = `
+      <div class="rpe-number" style="color:${r.color}">${r.rpe}</div>
+      <div>
+        <div class="rpe-title">${r.label}</div>
+        <div class="rpe-desc">${r.desc}</div>
+      </div>
+    `;
+    c.appendChild(card);
+  });
+
+  const divider = el('div','divider'); c.appendChild(divider);
+
+  const phaseTitle = el('div','section-title'); phaseTitle.textContent = 'RPE per fase'; c.appendChild(phaseTitle);
+  [1,2].forEach(ph => {
+    const pb = PHASES[ph];
+    const pcard = el('div','');
+    pcard.style.cssText = `background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;border-left:3px solid ${ph===1?'var(--A)':'var(--B)'}`;
+    pcard.innerHTML = `
+      <div style="font-size:12px;font-weight:700;color:${ph===1?'var(--A)':'var(--B)'};text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">${pb.label}</div>
+      <div style="font-size:13px;color:#aaa;line-height:1.6">Target: RPE ${pb.rpe_target}. ${pb.note}</div>
+    `;
+    c.appendChild(pcard);
+  });
+}
+
+// ============================================================
+// NOTES SECTION
+// ============================================================
+function renderNotes(c) {
+  const notes = [
+    { title: 'Progressione carico', col: 'var(--A)', text: 'Aggiungi carico solo quando completi tutte le serie con tecnica impeccabile. Non inseguire i kg. Regola: +2.5kg ogni 1–2 settimane sui compound. Se la tecnica crolla, mantieni il peso della settimana precedente.' },
+    { title: 'Giorni di torneo', col: 'var(--B)', text: 'Nella settimana di gara: solo Giorno A e Giorno B, volume ridotto del 30%. Non allenarti il giorno prima di una partita importante. Dopo la gara, almeno 48 ore prima del prossimo allenamento.' },
+    { title: 'Priorità giorni', col: 'var(--C)', text: 'Tieni sempre A e B: coprono tutti i pattern fondamentali. Sacrifica C o D se necessario. Con 2 giorni mantieni gli adattamenti, con 4 progredisci.' },
+    { title: 'Fase 1 — Ricondizionamento', col: 'var(--A)', text: 'Settimane 1–3: riduci di 1 serie gli esercizi compound, carichi al 60–70% del massimo percepito. I tendini impiegano 3 volte più dei muscoli ad adattarsi. Pazienza ora = meno infortuni dopo.' },
+    { title: 'Dolore alla spalla', col: '#FF5555', text: 'Distingui bruciore muscolare (ok) da fastidio articolare (stop). Al minimo fastidio alla spalla destra su qualsiasi esercizio overhead o di spinta, interrompi quell\'esercizio. Non spingere attraverso il dolore alla cuffia.' },
+    { title: 'Elastico a casa', col: 'var(--D)', text: 'Gli esercizi con elastico (band pull-apart, rotatori, Y-T-W) sono pensati per casa, prima di uscire nei giorni Upper. 10 minuti bastano. In palestra hai le sostituzioni con manubri e TRX.' },
+    { title: 'Beach volley', col: 'var(--B)', text: 'La sabbia aumenta lo stress sul tendine d\'Achille e i polpacci. Nella settimana con tornei di beach, riduci o elimina le alzate sui calf in palestra per non sovraccaricare.' },
+  ];
+
+  notes.forEach(n => {
+    const card = el('div', 'note-card');
+    card.style.borderLeftColor = n.col;
+    card.innerHTML = `
+      <div class="note-title" style="color:${n.col}">${n.title}</div>
+      <div class="note-text">${n.text}</div>
+    `;
+    c.appendChild(card);
+  });
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function el(tag, cls) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  return e;
+}
+
+function hexAlpha(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ============================================================
+// CONTROLS
+// ============================================================
+function changeWeek(dir) {
+  state.week = Math.max(1, state.week + dir);
+  render();
+}
+
+function setPhase(ph) {
+  state.phase = ph;
+  showToast(ph === 1 ? 'Fase 1: Ricondizionamento' : 'Fase 2: Progressione');
+  render();
+}
+
+function showSection(s) {
+  state.currentSection = s;
+  render();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+render();
+</script>
+
+</body>
+</html>
